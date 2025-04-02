@@ -1,0 +1,10 @@
+.pro-sidebar .pro-menu {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .pro-sidebar .pro-menu-item {
+    display: block !important;
+    width: 100% !important;
+  }
+  
