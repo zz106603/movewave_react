@@ -3,3 +3,14 @@
     transition: transform 0.2s ease-in-out;
   }
   
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease-in-out;
+}
+
+.fade-in.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+  
