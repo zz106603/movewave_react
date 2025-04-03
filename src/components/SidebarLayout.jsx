@@ -3,12 +3,12 @@ import { useState } from "react";
 import { FaBars } from "react-icons/fa";
 
 const sidebarContent = (
-  <div style={{ padding: "1rem", width: "200px", background: "#343a40", height: "100vh", color: "white" }}>
-    <h4>MoveWave</h4>
-    <ul style={{ listStyle: "none", padding: 0, color: "white" }}>
+  <div style={{ padding: "1rem", width: "200px", background: "#e9edf2", height: "100vh", color: "white" }}>
+    <h4 style={{color: "#353bea", fontWeight: "bold"}}>MoveWave</h4>
+    {/* <ul style={{ listStyle: "none", padding: 0, color: "white" }}>
         <li style={{ padding: "0.5rem 0" }}>홈</li>
         <li style={{ padding: "0.5rem 0" }}>설정</li>
-    </ul>
+    </ul> */}
   </div>
 );
 
