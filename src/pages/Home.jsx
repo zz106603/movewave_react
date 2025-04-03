@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import "./Home.css";
 
 function Home() {
   const [text, setText] = useState("");
@@ -56,14 +57,30 @@ function Home() {
             <h5>
               감정 분석 결과: {emotion} ({(confidence * 100).toFixed(1)}%)
             </h5>
-            <h6 className="text-muted">🎵 추천 음악 리스트</h6>
-            <ul className="list-group list-group-flush mt-2">
+            <h6 className="text-muted mt-3">🎵 추천 음악 리스트</h6>
+
+            <div className="row mt-3">
               {musicList.map((music, index) => (
-                <li className="list-group-item" key={index}>
-                  <strong>{music.title}</strong> - {music.artist}
-                </li>
+                <div className="col-md-4 mb-4" key={index}>
+                  <div
+                    className="card h-100 shadow-sm"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => window.open(music.videoUrl, "_blank")}
+                  >
+                    <img
+                      src={music.thumbnailUrl}
+                      className="card-img-top"
+                      alt={`${music.title} thumbnail`}
+                      style={{ height: "180px", objectFit: "cover" }}
+                    />
+                    <div className="card-body">
+                      <h6 className="card-title mb-1">{music.title}</h6>
+                      <p className="card-text text-muted mb-0">{music.artist}</p>
+                    </div>
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         )}
       </div>
