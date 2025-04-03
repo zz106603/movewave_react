@@ -7,9 +7,13 @@ function Home() {
   const [musicList, setMusicList] = useState([]);
   const [emotion, setEmotion] = useState("");
   const [confidence, setConfidence] = useState(0);
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
 
   const handleSubmit = async () => {
     if (!text.trim()) return alert("문장을 입력하세요!");
+
+    setLoading(true); // 로딩 시작
+    setMusicList([]); // 기존 추천 결과 초기화
 
     try {
       const res = await axios.post("http://localhost:8080/api/song", { text });
@@ -18,6 +22,9 @@ function Home() {
       setMusicList(res.data.songs);
     } catch (err) {
       console.error("API 호출 실패:", err);
+      alert("추천 생성에 실패했습니다.");
+    } finally {
+      setLoading(false); // 로딩 종료
     }
   };
 
@@ -48,9 +55,20 @@ function Home() {
           onChange={(e) => setText(e.target.value)}
         ></textarea>
 
-        <button className="btn btn-primary w-100 mb-4" onClick={handleSubmit}>
-          추천 받기
+        <button
+          className="btn btn-primary w-100 mb-4"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? "분석 중..." : "추천 받기"}
         </button>
+
+        {loading && (
+          <div className="text-center my-4">
+            <div className="spinner-border text-primary" role="status"></div>
+            <div className="mt-2">추천 음악을 생성 중입니다...</div>
+          </div>
+        )}
 
         {musicList.length > 0 && (
           <div>
