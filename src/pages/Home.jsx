@@ -107,9 +107,7 @@ function Home() {
                         }}
                       >
                         <div className="card-body">
-                          <h6 className="card-title mb-1">{music.title}</h6>
-                          <p className="card-text text-muted mb-2">{music.artist}</p>
-
+                          <p className="card-title mb-1">{music.title}</p>
                           {/* ✅ YouTube 영상 재생 */}
                           {music.videoId && (
                             <div className="ratio ratio-16x9">
