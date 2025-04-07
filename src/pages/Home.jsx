@@ -97,33 +97,37 @@ function Home() {
                   <h6 className="text-muted mt-3">🎵 추천 음악 리스트</h6>
 
                   <div className="row mt-3">
-                    {musicList.map((music, index) => (
-                      <div className="col-12 mb-3" key={index}>
-                        <div
-                          className="card h-100 shadow-sm"
-                          style={{
-                            cursor: "pointer",
-                            display: "flex",
-                            flexDirection: "row"
-                          }}
-                          onClick={() => window.open(music.videoUrl, "_blank")}
-                        >
-                          <img
-                            src={music.thumbnailUrl}
-                            alt={`${music.title} thumbnail`}
-                            style={{
-                              width: "120px",
-                              objectFit: "cover",
-                              borderRadius: "4px 0 0 4px"
-                            }}
-                          />
-                          <div className="card-body">
-                            <h6 className="card-title mb-1">{music.title}</h6>
-                            <p className="card-text text-muted mb-0">{music.artist}</p>
-                          </div>
+                  {musicList.map((music, index) => (
+                    <div className="col-12 mb-3" key={index}>
+                      <div
+                        className="card h-100 shadow-sm"
+                        style={{
+                          display: "flex",
+                          flexDirection: "row"
+                        }}
+                      >
+                        <div className="card-body">
+                          <h6 className="card-title mb-1">{music.title}</h6>
+                          <p className="card-text text-muted mb-2">{music.artist}</p>
+
+                          {/* ✅ YouTube 영상 재생 */}
+                          {music.videoId && (
+                            <div className="ratio ratio-16x9">
+                              <iframe
+                                width="100%"
+                                height="180"
+                                src={`https://www.youtube.com/embed/${music.videoId}`}
+                                title={`YouTube video for ${music.title}`}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                              ></iframe>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    ))}
+                    </div>
+                  ))}
                   </div>
                 </>
               ) : (
