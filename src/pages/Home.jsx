@@ -16,14 +16,21 @@ function Home() {
     setMusicList([]);
 
     try {
-      const res = await axios.post("http://localhost:8080/api/song", { text });
+      const res = await axios.post("http://localhost:8080/api/song", 
+        { text }, 
+        { withCredentials: true }
+      );
       setEmotion(res.data.emotion);
       setConfidence(res.data.confidence);
       setMusicList(res.data.songs);
     } catch (err) {
-      console.error("API 호출 실패:", err);
-      alert("추천 생성에 실패했습니다.");
-    } finally {
+      if (err.response?.status === 401) {
+        alert("로그인 또는 회원가입이 필요합니다.");
+      } else {
+        console.error("API 호출 실패:", err);
+        alert("추천 생성에 실패했습니다.");
+      }
+    }finally {
       setLoading(false);
     }
   };
