@@ -42,30 +42,37 @@ function SidebarLayout({ children }) {
 
         {/* 여기에 메뉴 항목 넣으면 됨 */}
         <ul style={{ listStyle: "none", padding: 0 }}>
-          <li>홈</li>
+          {/* <li>홈</li>
           <li>이력 보기</li>
-          <li>설정</li>
+          <li>설정</li> */}
         </ul>
       </div>
 
       {/* 👇 하단 로그인 버튼 */}
       <button
         style={{
-          backgroundColor: "white",
-          border: "1px solid #ccc",
-          padding: "0.5rem 1rem",
-          borderRadius: "5px",
-          cursor: "pointer",
-          display: "flex",
+          backgroundColor: "#fff",
+          border: "1px solid #dadce0",
+          borderRadius: "4px",
+          fontSize: "14px",
+          color: "#3c4043",
+          padding: "0.5rem 1.5rem",
+          display: "inline-flex",
           alignItems: "center",
-          justifyContent: "center",
-          color: "#DB4437",
+          gap: "0.5rem",
+          cursor: "pointer",
           fontWeight: "bold",
-          fontSize: "1rem", // ← 글자 크기도 명시
+          transition: "box-shadow 0.2s ease-in-out",
         }}
         onClick={handleGoogleLogin}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.boxShadow = "0 1px 3px rgba(60, 64, 67, 0.3)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.boxShadow = "none";
+        }}
       >
-        <FaGoogle style={{ marginRight: "0.5rem", color: "#DB4437" }} />
+        <FaGoogle style={{ color: "#DB4437" }} />
         Google 로그인
       </button>
     </div>

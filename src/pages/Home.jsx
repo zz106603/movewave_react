@@ -16,8 +16,8 @@ function Home() {
     setMusicList([]);
 
     try {
-      const res = await axios.post("http://localhost:8080/api/song", 
-        { text }, 
+      const res = await axios.post("http://localhost:8080/api/song",
+        { text },
         { withCredentials: true }
       );
       setEmotion(res.data.emotion);
@@ -30,121 +30,111 @@ function Home() {
         console.error("API 호출 실패:", err);
         alert("추천 생성에 실패했습니다.");
       }
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{
-      height: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "#f8f9fa",
-      padding: "1rem"
-    }}>
-      <div style={{
-        width: "100%",
-        maxWidth: "1200px",
-        backgroundColor: "white",
-        borderRadius: "8px",
-        boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-        padding: "2rem"
-      }}>
-        <h2 className="text-center mb-4">당신의 기분을 말로 표현해보세요 🎤</h2>
+    <div className="container py-5">
+      <div className="text-center mb-4">
+        <h2 style={{ fontWeight: "600" }}>오늘 기분은 어땠나요?</h2>
+        <textarea
+          className="form-control my-3"
+          placeholder="ex) 오늘 하루가 너무 길게 느껴졌어요"
+          rows={4}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+        <button
+          className="btn btn-primary w-100"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? "분석 중..." : "추천 받기"}
+        </button>
 
-        <div className="row">
-          {/* 왼쪽 입력 영역 */}
-          <div className="col-md-6">
-            <textarea
-              className="form-control mb-3"
-              placeholder="ex) 오늘 하루가 너무 길게 느껴졌어요"
-              rows={6}
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            ></textarea>
-
-            <button
-              className="btn btn-primary w-100 mb-3"
-              onClick={handleSubmit}
-              disabled={loading}
-            >
-              {loading ? "분석 중..." : "추천 받기"}
-            </button>
-
-            {/* ✅ 감정 분석 결과 여기에 표시 */}
-            {emotion && !loading && (
-              <div className="mb-3 text-center">
-                <strong>감정 분석 결과:</strong> {emotion} ({(confidence * 100).toFixed(1)}%)
-              </div>
-            )}
-
-            {loading && (
-              <div className="text-center my-4">
-                <div className="spinner-border text-primary" role="status"></div>
-                <div className="mt-2">추천 음악을 생성 중입니다...</div>
-              </div>
-            )}
+        {/* 감정 결과 박스 */}
+        {emotion && !loading && (
+          <div style={{
+            backgroundColor: "#f1f3f5",
+            borderRadius: "8px",
+            padding: "1rem",
+            textAlign: "center",
+            margin: "1rem 0",
+            fontWeight: "500"
+          }}>
+            감정 분석 결과: <strong>{emotion}</strong> ({(confidence * 100).toFixed(1)}%)
           </div>
+        )}
 
-
-          {/* 오른쪽 결과 */}
-          <div className="col-md-6">
-            <div
-              style={{
-                minHeight: "400px",
-                maxHeight: "500px", // 💡 이게 스크롤 높이
-                overflowY: "auto",
-                paddingRight: "10px" // 스크롤바 겹침 방지
-              }}
-            >
-              {musicList.length > 0 ? (
-                <>
-                  <h6 className="text-muted mt-3">🎵 추천 음악 리스트</h6>
-
-                  <div className="row mt-3">
-                  {musicList.map((music, index) => (
-                    <div className="col-12 mb-3" key={index}>
-                      <div
-                        className="card h-100 shadow-sm"
-                        style={{
-                          display: "flex",
-                          flexDirection: "row"
-                        }}
-                      >
-                        <div className="card-body">
-                          <p className="card-title mb-1">{music.title}</p>
-                          {/* ✅ YouTube 영상 재생 */}
-                          {music.videoId && (
-                            <div className="ratio ratio-16x9">
-                              <iframe
-                                width="100%"
-                                height="180"
-                                src={`https://www.youtube.com/embed/${music.videoId}`}
-                                title={`YouTube video for ${music.title}`}
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                              ></iframe>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  </div>
-                </>
-              ) : (
-                <div className="text-muted text-center mt-5">
-                  추천 결과가 이곳에 표시됩니다 🎶
-                </div>
-              )}
-            </div>
+        {/* 로딩 스피너 */}
+        {loading && (
+          <div className="text-center my-4">
+            <div className="spinner-border text-primary" role="status" />
+            <div className="mt-2">추천 음악을 생성 중입니다...</div>
           </div>
-
-        </div>
+        )}
       </div>
+
+      {/* 추천 음악 리스트 */}
+      {!loading && musicList.length > 0 && (
+        <>
+          <h5 className="mb-3" style={{ fontWeight: "600" }}>추천 음악 리스트</h5>
+
+          {musicList.map((music, index) => (
+            <div key={index} className="card mb-4 shadow-sm" style={{ borderRadius: "12px" }}>
+              <div className="card-body">
+                <h6 className="card-title" style={{ fontWeight: "600" }}>{music.title}</h6>
+
+                <div className="mb-3 text-center">
+                  <iframe
+                    width="100%"
+                    height="280"
+                    src={`https://www.youtube.com/embed/${music.videoId}`}
+                    title={`YouTube video for ${music.title}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+
+                {/* YouTube / YouTube Music 버튼 */}
+                <div className="d-flex justify-content-center gap-2">
+                  <a
+                    href={music.videoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-outline-primary btn-sm d-flex align-items-center"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" fill="#FF0000" className="me-2">
+                      <path d="M10 15V9l5 3-5 3zm10.65-9.24A2.78 2.78 0 0 0 18.73 4H5.27A2.78 2.78 0 0 0 3.35 5.76 29.94 29.94 0 0 0 3 12a29.94 29.94 0 0 0 .35 6.24A2.78 2.78 0 0 0 5.27 20h13.46a2.78 2.78 0 0 0 1.92-1.76A29.94 29.94 0 0 0 21 12a29.94 29.94 0 0 0-.35-6.24z" />
+                    </svg>
+                    YouTube
+                  </a>
+                  <a
+                    href={music.musicUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-outline-danger btn-sm d-flex align-items-center"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" fill="#EA0C0C" className="me-2">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
+                              10-4.48 10-10S17.52 2 12 2zm0 17.5
+                              c-4.14 0-7.5-3.36-7.5-7.5
+                              s3.36-7.5 7.5-7.5
+                              7.5 3.36 7.5 7.5
+                              -3.36 7.5-7.5 7.5zm-2-7.5
+                              l6 3.5V9l-6 3.5z" />
+                    </svg>
+                    YouTube Music
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </>
+      )}
     </div>
   );
 }
