@@ -24,7 +24,7 @@
 
 ## 🎬 화면
 
-> ![Image](https://github.com/user-attachments/assets/36716504-2f00-4439-b1fa-105bd234d85a)
+> ![Image](https://github.com/user-attachments/assets/ea9438e1-a1e9-4baa-ba98-435ec1448d79)
 
 ## 🛠️ 사용 기술 스택
 
