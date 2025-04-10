@@ -8,6 +8,9 @@ function Home() {
   const [emotion, setEmotion] = useState("");
   const [confidence, setConfidence] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [type, setType] = useState("전체"); // 기본값을 "전체"로 설정
+
+  const typeButtons = ["전체", "힙합", "발라드", "R&B", "댄스", "어쿠스틱", "재즈", "로우파이", "피아노", "힐링", "메탈"];
 
   const handleSubmit = async () => {
     if (!text.trim()) return alert("문장을 입력하세요!");
@@ -17,7 +20,10 @@ function Home() {
 
     try {
       const res = await axios.post("http://localhost:8080/api/song",
-        { text },
+        {
+          text,
+          type: type === "전체" ? "공통" : type
+        },
         { withCredentials: true }
       );
       setEmotion(res.data.emotion);
@@ -39,6 +45,20 @@ function Home() {
     <div className="container py-5">
       <div className="text-center mb-4">
         <h2 style={{ fontWeight: "600" }}>오늘 기분은 어땠나요?</h2>
+
+        {/* 🎧 장르 버튼 */}
+        <div className="d-flex flex-wrap justify-content-center gap-2 my-3">
+          {typeButtons.map((btn) => (
+            <button
+              key={btn}
+              className={`btn btn-sm ${type === btn ? "btn-primary" : "btn-outline-secondary"}`}
+              onClick={() => setType(btn)}
+            >
+              {btn}
+            </button>
+          ))}
+        </div>
+
         <textarea
           className="form-control my-3"
           placeholder="ex) 오늘 하루가 너무 길게 느껴졌어요"
@@ -99,7 +119,6 @@ function Home() {
                   />
                 </div>
 
-                {/* YouTube / YouTube Music 버튼 */}
                 <div className="d-flex justify-content-center gap-2">
                   <a
                     href={music.videoUrl}
@@ -108,7 +127,7 @@ function Home() {
                     className="btn btn-outline-primary btn-sm d-flex align-items-center"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" fill="#FF0000" className="me-2">
-                      <path d="M10 15V9l5 3-5 3zm10.65-9.24A2.78 2.78 0 0 0 18.73 4H5.27A2.78 2.78 0 0 0 3.35 5.76 29.94 29.94 0 0 0 3 12a29.94 29.94 0 0 0 .35 6.24A2.78 2.78 0 0 0 5.27 20h13.46a2.78 2.78 0 0 0 1.92-1.76A29.94 29.94 0 0 0 21 12a29.94 29.94 0 0 0-.35-6.24z" />
+                      <path d="M10 15V9l5 3-5 3zm10.65-9.24A2.78 2.78 0 0 0 18.73 4H5.27A2.78 2.78 0 0 0 3.35 5.76 29.94 29.94 0 0 0 3 12a29.94 29.94 0 0 0 .35 6.24A2.78 2.78 0 0 0 5.27 20h13.46a2.78 2.78 0 0 0 1.92-1.76A29.94 29.94 0 0 0 21 12a29.94 29.94 0 0 0-.35-6.24z"/>
                     </svg>
                     YouTube
                   </a>
@@ -125,7 +144,7 @@ function Home() {
                               s3.36-7.5 7.5-7.5
                               7.5 3.36 7.5 7.5
                               -3.36 7.5-7.5 7.5zm-2-7.5
-                              l6 3.5V9l-6 3.5z" />
+                              l6 3.5V9l-6 3.5z"/>
                     </svg>
                     YouTube Music
                   </a>
