@@ -1,9 +1,13 @@
 import Sidebar from "react-sidebar";
-import { useState } from "react";
+import { useState, forwardRef  } from "react";
 import { FaBars, FaGoogle } from "react-icons/fa";
+import { Link, useLocation } from "react-router-dom";
 
-function SidebarLayout({ children }) {
+
+function SidebarLayout({ children, scrollRef }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const location = useLocation();
 
   const handleGoogleLogin = () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/google";
@@ -40,12 +44,44 @@ function SidebarLayout({ children }) {
           />
         </div>
 
-        {/* 여기에 메뉴 항목 넣으면 됨 */}
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          {/* <li>홈</li>
-          <li>이력 보기</li>
-          <li>설정</li> */}
-        </ul>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <Link
+            to="/"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              textDecoration: "none",
+              fontWeight: "bold",
+              color: location.pathname === "/" ? "#353bea" : "#333",
+              backgroundColor: location.pathname === "/" ? "#dce3ff" : "transparent",
+              padding: "0.4rem 0.6rem",
+              borderRadius: "6px",
+            }}
+          >
+            🏠 Home
+          </Link>
+
+          <Link
+            to="/favorites"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              textDecoration: "none",
+              fontWeight: "bold",
+              color: location.pathname === "/favorites" ? "#353bea" : "#333",
+              backgroundColor: location.pathname === "/favorites" ? "#dce3ff" : "transparent",
+              padding: "0.4rem 0.6rem",
+              borderRadius: "6px",
+            }}
+          >
+            ⭐ PlayList
+          </Link>
+        </div>
+
+
+
       </div>
 
       {/* 👇 하단 로그인 버튼 */}
@@ -95,7 +131,7 @@ function SidebarLayout({ children }) {
         }
       }}
     >
-      <div style={{ flex: 1, overflowY: "auto", padding: "1rem" }}>
+      <div  ref={scrollRef} style={{ flex: 1, overflowY: "auto", padding: "1rem" }}>
         {!sidebarOpen && (
           <div
             style={{ fontSize: "1.5rem", cursor: "pointer", marginBottom: "1rem" }}

@@ -14,3 +14,27 @@
   transform: translateY(0);
 }
   
+/* YouTube Outline Button */
+.btn-outline-youtube {
+  border: 1px solid #FF0000;
+  color: #FF0000;
+  background-color: transparent;
+  transition: all 0.2s ease;
+}
+.btn-outline-youtube:hover {
+  background-color: #FF0000;
+  color: white;
+}
+
+/* YouTube Music Outline Button */
+.btn-outline-ytmusic {
+  border: 1px solid #EA0C0C;
+  color: #EA0C0C;
+  background-color: transparent;
+  transition: all 0.2s ease;
+}
+.btn-outline-ytmusic:hover {
+  background-color: #EA0C0C;
+  color: white;
+}
+
