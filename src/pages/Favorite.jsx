@@ -6,26 +6,65 @@ function FavoritesPage({ scrollRef }) {
   const [favorites, setFavorites] = useState([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(null); // null: 로딩중, false: 비로그인, true: 로그인
+
+  // 로그인 여부 확인
+  useEffect(() => {
+    const checkLogin = async () => {
+      try {
+        await axios.get("http://localhost:8080/api/account", {
+          withCredentials: true,
+        });
+        setIsLoggedIn(true);
+      } catch {
+        setIsLoggedIn(false);
+        Swal.fire({
+          icon: "warning",
+          title: "로그인이 필요합니다",
+          text: "즐겨찾기 기능을 이용하려면 먼저 로그인해주세요.",
+          confirmButtonText: "확인",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "/";
+          }
+        });
+      }
+    };
+    checkLogin();
+  }, []);
+
+  // 로그인된 경우에만 즐겨찾기 가져오기
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchPage(0);
+    }
+  }, [isLoggedIn]);
 
   const fetchPage = (pageNum) => {
-    axios.get(`http://localhost:8080/api/favorite/song/page?page=${pageNum}&size=5`, {
-      withCredentials: true,
-    })
+    axios
+      .get(`http://localhost:8080/api/favorite/song/page?page=${pageNum}&size=5`, {
+        withCredentials: true,
+      })
       .then((res) => {
-        setFavorites(res.data.content); // Page<T>의 content
+        setFavorites(res.data.content);
         setPage(res.data.number);
         setTotalPages(res.data.totalPages);
-        scrollRef?.current?.scrollTo({ top: 0});
+        scrollRef?.current?.scrollTo({ top: 0 });
       })
       .catch((err) => {
         console.error("즐겨찾기 목록 불러오기 실패", err);
-        alert("즐겨찾기 목록을 불러오지 못했습니다.");
+        Swal.fire({
+          icon: "error",
+          title: "오류 발생",
+          text: "즐겨찾기 목록을 불러오지 못했습니다.",
+        });
       });
   };
 
-  useEffect(() => {
-    fetchPage(0);
-  }, []);
+  // 아래는 동일: 삭제, 렌더링 등등
+
 
   const handleDeleteConfirm = (music) => {
     Swal.fire({
