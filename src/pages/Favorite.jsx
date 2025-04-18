@@ -66,8 +66,8 @@ function FavoritesPage({ scrollRef }) {
   // 아래는 동일: 삭제, 렌더링 등등
 
 
-  const handleDeleteConfirm = (music) => {
-    Swal.fire({
+  const handleDeleteConfirm = async (music) => {
+    const result = await Swal.fire({
       icon: 'warning',
       title: '즐겨찾기 취소',
       text: `"${music.title}"을(를) 즐겨찾기에서 제거하시겠어요?`,
@@ -76,33 +76,33 @@ function FavoritesPage({ scrollRef }) {
       cancelButtonText: '닫기',
       confirmButtonColor: '#d33',
       cancelButtonColor: '#aaa'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteFavorite(music);
-      }
     });
-  };
 
-  const deleteFavorite = async (music) => {
-    try {
-      await axios.delete(`http://localhost:8080/api/favorite/song/${music.videoId}`, {
-        withCredentials: true
-      });
-      Swal.fire({
-        icon: 'success',
-        title: '삭제 완료',
-        text: `"${music.title}"을(를) 즐겨찾기에서 제거했어요.`,
-        confirmButtonColor: '#d33'
-      });
-      fetchPage(page); // 현재 페이지 다시 불러오기
-    } catch (err) {
-      console.error("즐겨찾기 삭제 실패:", err);
-      Swal.fire({
-        icon: 'error',
-        title: '오류 발생',
-        text: '즐겨찾기 삭제 중 문제가 발생했습니다.',
-        confirmButtonColor: '#d33'
-      });
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`http://localhost:8080/api/favorite/song/${music.videoId}`, {
+          withCredentials: true
+        });
+        
+        Swal.fire({
+          icon: 'success',
+          title: '삭제 완료',
+          text: `"${music.title}"을(를) 즐겨찾기에서 제거했어요.`,
+          confirmButtonColor: '#d33',
+          timer: 1500,
+          showConfirmButton: false
+        });
+        
+        fetchPage(page); // 현재 페이지 다시 불러오기
+      } catch (err) {
+        console.error("즐겨찾기 삭제 실패:", err);
+        Swal.fire({
+          icon: 'error',
+          title: '오류 발생',
+          text: '즐겨찾기 삭제 중 문제가 발생했습니다.',
+          confirmButtonColor: '#d33'
+        });
+      }
     }
   };
 

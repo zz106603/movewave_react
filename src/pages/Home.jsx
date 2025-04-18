@@ -54,10 +54,10 @@ function Home() {
     }
   };
 
-  const handleFavoriteWithConfirm = (music) => {
+  const handleFavoriteWithConfirm = async (music) => {
     const isFavorited = favorites.includes(music.videoId);
   
-    Swal.fire({
+    const result = await Swal.fire({
       icon: isFavorited ? 'warning' : 'question',
       title: isFavorited ? 'PlayList 취소' : 'PlayList 추가',
       text: `"${music.title}"을(를) ${isFavorited ? 'PlayList에서 제거하시겠어요?' : 'PlayList에 추가하시겠어요?'}`,
@@ -65,52 +65,52 @@ function Home() {
       confirmButtonText: isFavorited ? '제거하기' : '추가하기',
       cancelButtonText: '닫기',
       reverseButtons: true,
-      confirmButtonColor: isFavorited ? '#d33' : '#3085d6',   // 빨강 or 파랑
+      confirmButtonColor: isFavorited ? '#d33' : '#3085d6',
       cancelButtonColor: '#aaa'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        toggleFavorite(music, isFavorited);
-      }
     });
-  };
-  
-  const toggleFavorite = async (music, isFavorited) => {
-    try {
-      if (isFavorited) {
-        await axios.delete(`http://localhost:8080/api/favorite/song/${music.videoId}`, { withCredentials: true });
-        setFavorites(prev => prev.filter(id => id !== music.videoId));
-  
+
+    if (result.isConfirmed) {
+      try {
+        if (isFavorited) {
+          await axios.delete(`http://localhost:8080/api/favorite/song/${music.videoId}`, { withCredentials: true });
+          setFavorites(prev => prev.filter(id => id !== music.videoId));
+    
+          Swal.fire({
+            icon: 'success',
+            title: '삭제 완료',
+            text: `"${music.title}"을(를) 즐겨찾기에서 제거했어요.`,
+            confirmButtonColor: '#d33',
+            timer: 1500,
+            showConfirmButton: false
+          });
+        } else {
+          await axios.post("http://localhost:8080/api/favorite/song", {
+            videoId: music.videoId,
+            title: music.title,
+            thumbnailUrl: music.thumbnailUrl,
+            videoUrl: music.videoUrl,
+            musicUrl: music.musicUrl
+          }, { withCredentials: true });
+          setFavorites(prev => [...prev, music.videoId]);
+    
+          Swal.fire({
+            icon: 'success',
+            title: '추가 완료',
+            text: `"${music.title}"을(를) 즐겨찾기에 추가했어요!`,
+            confirmButtonColor: '#3085d6',
+            timer: 1500,
+            showConfirmButton: false
+          });
+        }
+      } catch (err) {
+        console.error("즐겨찾기 처리 실패:", err);
         Swal.fire({
-          icon: 'success  ',
-          title: '삭제 완료',
-          text: `"${music.title}"을(를) 즐겨찾기에서 제거했어요.`,
+          icon: 'error',
+          title: '오류 발생',
+          text: '즐겨찾기 처리 중 문제가 발생했습니다.',
           confirmButtonColor: '#d33'
         });
-      } else {
-        await axios.post("http://localhost:8080/api/favorite/song", {
-          videoId: music.videoId,
-          title: music.title,
-          thumbnailUrl: music.thumbnailUrl,
-          videoUrl: music.videoUrl,
-          musicUrl: music.musicUrl
-        }, { withCredentials: true });
-        setFavorites(prev => [...prev, music.videoId]);
-  
-        Swal.fire({
-          icon: 'success',
-          title: '추가 완료',
-          text: `"${music.title}"을(를) 즐겨찾기에 추가했어요!`,
-          confirmButtonColor: '#3085d6'
-        });
       }
-    } catch (err) {
-      console.error("즐겨찾기 처리 실패:", err);
-      Swal.fire({
-        icon: 'error',
-        title: '오류 발생',
-        text: '즐겨찾기 처리 중 문제가 발생했습니다.',
-        confirmButtonColor: '#d33'
-      });
     }
   };
 
