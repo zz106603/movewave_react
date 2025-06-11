@@ -1,0 +1,7 @@
+services:
+  frontend:
+    build: .
+    ports:
+      - "3000:80"    # localhost:3000 -> container:80
+    environment:
+      - NODE_ENV=production
