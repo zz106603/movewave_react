@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import.meta.env.VITE_API_URL
 
 function FavoritesPage({ scrollRef }) {
   const [favorites, setFavorites] = useState([]);
@@ -12,7 +13,8 @@ function FavoritesPage({ scrollRef }) {
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        await axios.get("http://localhost:8080/api/account", {
+        // await axios.get(`${import.meta.env.VITE_API_URL}/api/account`, {
+        await axios.get(`http://localhost:8080/api/account`, {
           withCredentials: true,
         });
         setIsLoggedIn(true);
@@ -44,6 +46,7 @@ function FavoritesPage({ scrollRef }) {
 
   const fetchPage = (pageNum) => {
     axios
+      // .get(`${import.meta.env.VITE_API_URL}/api/favorite/song/page?page=${pageNum}&size=5`, {
       .get(`http://localhost:8080/api/favorite/song/page?page=${pageNum}&size=5`, {
         withCredentials: true,
       })
@@ -80,7 +83,8 @@ function FavoritesPage({ scrollRef }) {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:8080/api/favorite/song/${music.videoId}`, {
+        // await axios.delete(`${import.meta.env.VITE_API_URL}/api/favorite/song/${music.videoId}`, {
+          await axios.delete(`http://localhost:8080/api/favorite/song/${music.videoId}`, {
           withCredentials: true
         });
         

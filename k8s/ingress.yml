@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: movewave-ingress
+  namespace: movewave
+  annotations:
+    nginx.ingress.kubernetes.io.rewrite-target: /
+spec:
+  rules:
+  - host: movewave.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: movewave-react-service
+            port:
+              number: 80
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: movewave-java-service
+            port:
+              number: 8080
+      # FIXME: 현재는 Google Cloud Console에서 localhost만 지원하기 때문에 아래는 사용하지 않고 포워딩 사용
+      - path: /oauth2
+        pathType: Prefix
+        backend:
+          service:
+            name: movewave-java-service
+            port:
+              number: 8080

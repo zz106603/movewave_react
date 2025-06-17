@@ -6,9 +6,14 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+COPY .env.production .env.production
+
+# Print env file to verify
+RUN cat .env.production
+
 # Copy source and build
 COPY . .
-RUN npm run build
+RUN npm run build -- --mode production
 
 # --- runtime step ---
 FROM nginx:alpine

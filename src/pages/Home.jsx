@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "./Home.css";
+import.meta.env.VITE_API_URL
 
 function Home() {
   const [text, setText] = useState("");
@@ -15,7 +16,8 @@ function Home() {
   const typeButtons = ["전체", "힙합", "발라드", "R&B", "댄스", "어쿠스틱", "재즈", "로우파이", "피아노", "힐링", "메탈"];
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/favorite/song", { withCredentials: true })
+    // axios.get(`${import.meta.env.VITE_API_URL}/api/favorite/song`, { withCredentials: true })
+    axios.get(`http://localhost:8080/api/favorite/song`, { withCredentials: true })
       .then(res => {
         const ids = res.data.map(song => song.videoId);
         setFavorites(ids);
@@ -32,7 +34,8 @@ function Home() {
     setMusicList([]);
 
     try {
-      const res = await axios.post("http://localhost:8080/api/song",
+      // const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/song`,
+      const res = await axios.post(`http://localhost:8080/api/song`,
         {
           text,
           type: type === "전체" ? "공통" : type
@@ -72,6 +75,7 @@ function Home() {
     if (result.isConfirmed) {
       try {
         if (isFavorited) {
+          // await axios.delete(`${import.meta.env.VITE_API_URL}/api/favorite/song/${music.videoId}`, { withCredentials: true });
           await axios.delete(`http://localhost:8080/api/favorite/song/${music.videoId}`, { withCredentials: true });
           setFavorites(prev => prev.filter(id => id !== music.videoId));
     
@@ -84,7 +88,8 @@ function Home() {
             showConfirmButton: false
           });
         } else {
-          await axios.post("http://localhost:8080/api/favorite/song", {
+          // await axios.post(`${import.meta.env.VITE_API_URL}/api/favorite/song`, {
+          await axios.post(`http://localhost:8080/api/favorite/song`, {
             videoId: music.videoId,
             title: music.title,
             thumbnailUrl: music.thumbnailUrl,

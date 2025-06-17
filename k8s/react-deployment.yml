@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movewave-react
+  namespace: movewave
+  labels:
+    app: movewave-react
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: movewave-react
+  template:
+    metadata:
+      labels:
+        app: movewave-react
+    spec:
+      containers:
+      - name: movewave-react
+        image: yunhwan95/movewave_react:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: TZ
+          value: "Asia/Seoul"

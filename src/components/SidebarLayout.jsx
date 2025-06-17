@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { FaBars, FaGoogle, FaSignOutAlt } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import.meta.env.VITE_API_URL
 
 function SidebarLayout({ children, scrollRef }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -14,7 +15,8 @@ function SidebarLayout({ children, scrollRef }) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/account", {
+        // const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/account`, {
+        const response = await axios.get(`http://localhost:8080/api/account`, {
           withCredentials: true,
         });
         setAccount(response.data);
@@ -27,12 +29,14 @@ function SidebarLayout({ children, scrollRef }) {
   }, []);
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8080/oauth2/authorization/google";
+    // window.location.href = `${import.meta.env.VITE_API_URL}/oauth2/authorization/google`;
+    window.location.href = `http://localhost:8080/oauth2/authorization/google`;
   };
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8080/api/account/logout", {}, { withCredentials: true });
+      // await axios.post(`${import.meta.env.VITE_API_URL}/api/account/logout`, {}, { withCredentials: true });
+      await axios.post(`http://localhost:8080/api/account/logout`, {}, { withCredentials: true });
       setAccount(null);
       navigate("/"); // 홈으로 리디렉션
     } catch (err) {
